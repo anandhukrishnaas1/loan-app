@@ -1,0 +1,434 @@
+/* ============================================
+   STEP-SPECIFIC STYLES
+   ============================================ */
+
+/* --- App Layout --- */
+.app-header {
+  text-align: center;
+  padding: var(--space-xl) var(--space-md) 0;
+}
+
+.app-logo {
+  font-size: var(--font-size-2xl);
+  font-weight: 800;
+  margin-bottom: var(--space-xs);
+}
+
+.app-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--text-tertiary);
+}
+
+.app-container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+  padding-bottom: var(--space-3xl);
+}
+
+.step-container {
+  position: relative;
+  min-height: 400px;
+}
+
+.step-content {
+  animation: step-enter 0.4s ease forwards;
+}
+
+.step-content.exiting {
+  animation: step-exit 0.3s ease forwards;
+}
+
+.step-header {
+  margin-bottom: var(--space-xl);
+}
+
+.step-title {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  margin-bottom: var(--space-sm);
+}
+
+.step-description {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+/* --- Navigation Buttons --- */
+.step-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--space-2xl);
+  padding-top: var(--space-xl);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.step-navigation .btn {
+  min-width: 140px;
+}
+
+.nav-spacer {
+  flex: 1;
+}
+
+/* --- Step 1: Loan Type Cards --- */
+.loan-type-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+  margin-top: var(--space-xl);
+}
+
+.loan-type-card {
+  position: relative;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-xl);
+  padding: var(--space-2xl) var(--space-lg);
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  overflow: hidden;
+}
+
+.loan-type-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.loan-type-card[data-type="personal"]::before {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.05));
+}
+
+.loan-type-card[data-type="home"]::before {
+  background: linear-gradient(135deg, rgba(67, 233, 123, 0.1), rgba(56, 249, 215, 0.05));
+}
+
+.loan-type-card[data-type="business"]::before {
+  background: linear-gradient(135deg, rgba(250, 112, 154, 0.1), rgba(254, 225, 64, 0.05));
+}
+
+.loan-type-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: var(--shadow-lg);
+}
+
+.loan-type-card:hover::before {
+  opacity: 1;
+}
+
+.loan-type-card.selected {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-glow), var(--shadow-lg);
+}
+
+.loan-type-card.selected::before {
+  opacity: 1;
+}
+
+.loan-type-card.selected::after {
+  content: '✓';
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--gradient-success);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0a0e27;
+  font-size: 14px;
+  font-weight: 700;
+  animation: success-bounce 0.4s ease;
+}
+
+.loan-type-icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-md);
+  display: block;
+}
+
+.loan-type-name {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  margin-bottom: var(--space-sm);
+}
+
+.loan-type-range {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-md);
+}
+
+.loan-type-features {
+  list-style: none;
+  text-align: left;
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+}
+
+.loan-type-features li {
+  padding: 3px 0;
+}
+
+.loan-type-features li::before {
+  content: '→ ';
+  color: var(--color-primary-light);
+}
+
+@media (max-width: 768px) {
+  .loan-type-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .loan-type-card {
+    padding: var(--space-lg);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    text-align: left;
+    gap: var(--space-md);
+  }
+
+  .loan-type-icon {
+    font-size: 2rem;
+    margin-bottom: 0;
+    grid-row: span 2;
+    align-self: center;
+  }
+
+  .loan-type-features {
+    grid-column: span 2;
+  }
+}
+
+/* --- Step 2: Verification Inline --- */
+.verification-row {
+  display: flex;
+  gap: var(--space-md);
+  align-items: flex-end;
+}
+
+.verification-row .form-group {
+  flex: 1;
+}
+
+.verify-btn-container {
+  margin-bottom: var(--space-lg);
+}
+
+.verify-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+  font-size: var(--font-size-sm);
+}
+
+.verify-status.verifying {
+  color: var(--text-secondary);
+}
+
+.verify-status.verified {
+  color: var(--text-success);
+}
+
+.verify-status.failed {
+  color: var(--text-error);
+}
+
+/* --- Step 5: Loan Slider Section --- */
+.slider-section {
+  margin-bottom: var(--space-xl);
+}
+
+.slider-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--space-md);
+}
+
+/* --- Step 8: Document Categories --- */
+.doc-category {
+  margin-bottom: var(--space-xl);
+}
+
+.doc-category-title {
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  margin-bottom: var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.doc-category-title .badge {
+  font-size: var(--font-size-xs);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background: rgba(245, 87, 108, 0.15);
+  color: var(--color-error);
+  font-weight: 500;
+}
+
+.doc-category-title .badge.complete {
+  background: rgba(67, 233, 123, 0.15);
+  color: var(--text-success);
+}
+
+/* --- Step 9: Signature Section --- */
+.signature-section {
+  margin-top: var(--space-lg);
+}
+
+.signature-date {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.signature-date strong {
+  color: var(--text-primary);
+}
+
+/* --- Step 10: Review Summary --- */
+.review-header-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+  padding: var(--space-lg);
+  background: rgba(102, 126, 234, 0.08);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: var(--radius-lg);
+}
+
+.review-header-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.review-header-info h3 {
+  font-size: var(--font-size-md);
+  margin-bottom: var(--space-xs);
+}
+
+.review-header-info p {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+/* --- Auto-save indicator --- */
+.autosave-indicator {
+  position: fixed;
+  bottom: var(--space-md);
+  left: var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(26, 31, 74, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+  transition: all var(--transition-base);
+  opacity: 0;
+  transform: translateY(10px);
+  z-index: var(--z-dropdown);
+}
+
+.autosave-indicator.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.autosave-indicator.saving {
+  color: var(--color-primary-light);
+}
+
+.autosave-indicator.saved {
+  color: var(--text-success);
+}
+
+.autosave-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-tertiary);
+  transition: background var(--transition-fast);
+}
+
+.autosave-indicator.saving .autosave-dot {
+  background: var(--color-primary);
+  animation: pulse 1s ease infinite;
+}
+
+.autosave-indicator.saved .autosave-dot {
+  background: var(--color-success);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* --- Address autocomplete dropdown --- */
+.autocomplete-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--color-bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: var(--z-dropdown);
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: var(--space-xs);
+}
+
+.autocomplete-item {
+  padding: var(--space-md);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  font-size: var(--font-size-sm);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.autocomplete-item:last-child {
+  border-bottom: none;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.highlighted {
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.autocomplete-item-primary {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.autocomplete-item-secondary {
+  color: var(--text-tertiary);
+  font-size: var(--font-size-xs);
+  margin-top: 2px;
+}
