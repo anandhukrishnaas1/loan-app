@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LoanEase — Project Report</title>
+  <style>
+    /* ===== Print & Page Setup ===== */
+    @page {
+      size: A4;
+      margin: 20mm 18mm 25mm 18mm;
+    }
+
+    @media print {
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .no-print { display: none !important; }
+      .page-break { page-break-before: always; }
+      h2 { page-break-after: avoid; }
+      table, img { page-break-inside: avoid; }
+    }
+
+    /* ===== Base Styles ===== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 12pt;
+      line-height: 1.7;
+      color: #1a1a2e;
+      background: #fff;
+      max-width: 210mm;
+      margin: 0 auto;
+      padding: 20mm 18mm;
+    }
+
+    /* ===== Cover Page ===== */
+    .cover-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 85vh;
+      text-align: center;
+      border: 3px solid #1a1a2e;
+      padding: 60px 40px;
+      position: relative;
+    }
+
+    .cover-page::before {
+      content: '';
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      right: 6px;
+      bottom: 6px;
+      border: 1px solid #1a1a2e;
+      pointer-events: none;
+    }
+
+    .cover-icon {
+      font-size: 64pt;
+      margin-bottom: 20px;
+    }
+
+    .cover-title {
+      font-size: 28pt;
+      font-weight: 800;
+      color: #1a1a2e;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .cover-subtitle {
+      font-size: 16pt;
+      font-weight: 400;
+      color: #4a4a6a;
+      margin-bottom: 50px;
+    }
+
+    .cover-line {
+      width: 80px;
+      height: 3px;
+      background: #1a1a2e;
+      margin: 0 auto 50px;
+    }
+
+    .cover-meta {
+      font-size: 12pt;
+      color: #4a4a6a;
+      line-height: 2.2;
+    }
+
+    .cover-meta strong {
+      color: #1a1a2e;
+    }
+
+    /* ===== Print Button ===== */
+    .print-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #1a1a2e;
+      color: #fff;
+      border: none;
+      padding: 14px 28px;
+      font-size: 14pt;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      z-index: 1000;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .print-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 28px rgba(0,0,0,0.35);
+    }
+
+    /* ===== Table of Contents ===== */
+    .toc {
+      margin-top: 10px;
+    }
+
+    .toc-item {
+      display: flex;
+      align-items: baseline;
+      padding: 6px 0;
+      text-decoration: none;
+      color: #1a1a2e;
+      font-size: 12pt;
+      border-bottom: 1px dotted #ccc;
+    }
+
+    .toc-item:hover {
+      color: #5b5bbd;
+    }
+
+    .toc-number {
+      font-weight: 700;
+      width: 40px;
+      flex-shrink: 0;
+    }
+
+    .toc-text {
+      flex: 1;
+    }
+
+    /* ===== Section Headings ===== */
+    h2 {
+      font-size: 18pt;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin: 30px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 2.5px solid #1a1a2e;
+    }
+
+    h2 .section-num {
+      margin-right: 10px;
+    }
+
+    h3 {
+      font-size: 13pt;
+      font-weight: 700;
+      color: #2d2d52;
+      margin: 22px 0 10px;
+    }
+
+    h4 {
+      font-size: 12pt;
+      font-weight: 600;
+      color: #3d3d6d;
+      margin: 16px 0 8px;
+    }
+
+    /* ===== Paragraphs & Lists ===== */
+    p {
+      margin-bottom: 12px;
+      text-align: justify;
+    }
+
+    ul, ol {
+      margin: 10px 0 16px 24px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    /* ===== Tables ===== */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0 20px;
+      font-size: 11pt;
+    }
+
+    th {
+      background: #1a1a2e;
+      color: #fff;
+      font-weight: 600;
+      text-align: left;
+      padding: 10px 14px;
+    }
+
+    td {
+      padding: 9px 14px;
+      border-bottom: 1px solid #e0e0e0;
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) td {
+      background: #f7f7fb;
+    }
+
+    /* ===== Code Blocks ===== */
+    code {
+      font-family: 'Consolas', 'Courier New', monospace;
+      background: #f0f0f5;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 10pt;
+    }
+
+    pre {
+      background: #f5f5fa;
+      border: 1px solid #e0e0e8;
+      border-radius: 6px;
+      padding: 14px 18px;
+      font-size: 10pt;
+      overflow-x: auto;
+      margin: 10px 0 18px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      line-height: 1.5;
+    }
+
+    /* ===== Screenshots ===== */
+    .screenshot-container {
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .screenshot-container img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    }
+
+    .screenshot-caption {
+      margin-top: 10px;
+      font-size: 10pt;
+      font-style: italic;
+      color: #666;
+    }
+
+    /* ===== Info Boxes ===== */
+    .info-box {
+      background: #f0f4ff;
+      border-left: 4px solid #4a6cf7;
+      padding: 14px 18px;
+      margin: 14px 0;
+      border-radius: 0 6px 6px 0;
+      font-size: 11pt;
+    }
+
+    /* ===== File Tree ===== */
+    .file-tree {
+      background: #f8f8fc;
+      border: 1px solid #e4e4ee;
+      border-radius: 6px;
+      padding: 16px 20px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 10pt;
+      line-height: 1.8;
+      margin: 10px 0 18px;
+    }
+
+    /* ===== Footer ===== */
+    .report-footer {
+      margin-top: 40px;
+      padding-top: 16px;
+      border-top: 1px solid #ccc;
+      text-align: center;
+      font-size: 9pt;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+<!-- =============== PRINT BUTTON =============== -->
+<button class="print-btn no-print" onclick="window.print()">📄 Save as PDF</button>
+
+<!-- =============== COVER PAGE =============== -->
+<div class="cover-page">
+  <div class="cover-icon">🏦</div>
+  <div class="cover-title">LoanEase</div>
+  <div class="cover-subtitle">Smart Loan Application Portal</div>
+  <div class="cover-line"></div>
+  <div style="font-size:14pt; font-weight:600; color:#1a1a2e; margin-bottom: 40px;">PROJECT REPORT</div>
+  <div class="cover-meta">
+    <strong>Project Name:</strong> LoanEase — Multi-Step Loan Application<br>
+    <strong>Technology:</strong> HTML5, CSS3, Vanilla JavaScript (ES6+), Vite<br>
+    <strong>Repository:</strong> <a href="https://github.com/anandhukrishnaas1/loan-app" style="color:#4a6cf7;">https://github.com/anandhukrishnaas1/loan-app</a><br>
+    <strong>Date:</strong> June 2026<br>
+  </div>
+</div>
+
+<!-- =============== TABLE OF CONTENTS =============== -->
+<div class="page-break"></div>
+
+<h2>Table of Contents</h2>
+<div class="toc">
+  <a class="toc-item" href="#s1"><span class="toc-number">1.</span><span class="toc-text">Introduction</span></a>
+  <a class="toc-item" href="#s2"><span class="toc-number">2.</span><span class="toc-text">Objectives</span></a>
+  <a class="toc-item" href="#s3"><span class="toc-number">3.</span><span class="toc-text">Technology Stack</span></a>
+  <a class="toc-item" href="#s4"><span class="toc-number">4.</span><span class="toc-text">System Architecture</span></a>
+  <a class="toc-item" href="#s5"><span class="toc-number">5.</span><span class="toc-text">Project Structure</span></a>
+  <a class="toc-item" href="#s6"><span class="toc-number">6.</span><span class="toc-text">Module Descriptions</span></a>
+  <a class="toc-item" href="#s7"><span class="toc-number">7.</span><span class="toc-text">Application Workflow</span></a>
+  <a class="toc-item" href="#s8"><span class="toc-number">8.</span><span class="toc-text">Key Features</span></a>
+  <a class="toc-item" href="#s9"><span class="toc-number">9.</span><span class="toc-text">Testing & Quality Assurance</span></a>
+  <a class="toc-item" href="#s10"><span class="toc-number">10.</span><span class="toc-text">Screenshots</span></a>
+  <a class="toc-item" href="#s11"><span class="toc-number">11.</span><span class="toc-text">Future Enhancements</span></a>
+  <a class="toc-item" href="#s12"><span class="toc-number">12.</span><span class="toc-text">Conclusion</span></a>
+  <a class="toc-item" href="#s13"><span class="toc-number">13.</span><span class="toc-text">References</span></a>
+</div>
+
+<!-- =============== 1. INTRODUCTION =============== -->
+<div class="page-break"></div>
+
+<h2 id="s1"><span class="section-num">1.</span> Introduction</h2>
+<p>
+  <strong>LoanEase</strong> is a modern, responsive, multi-step web application designed to streamline and digitize the loan application process. Traditional loan applications involve lengthy paper forms, multiple branch visits, and a cumbersome manual verification process. LoanEase addresses these pain points by providing an intuitive, guided digital experience that allows applicants to complete their entire loan application online.
+</p>
+<p>
+  The application supports three major loan categories — <strong>Personal Loans</strong>, <strong>Home Loans</strong>, and <strong>Business Loans</strong> — each with tailored form fields, validation rules, and conditional steps. The project is built entirely with modern vanilla JavaScript (ES6+), HTML5, and CSS3, powered by Vite as the build tool, demonstrating that sophisticated web applications can be developed without heavy framework dependencies.
+</p>
+
+<div class="info-box">
+  <strong>GitHub Repository:</strong> <a href="https://github.com/anandhukrishnaas1/loan-app">https://github.com/anandhukrishnaas1/loan-app</a>
+</div>
+
+<!-- =============== 2. OBJECTIVES =============== -->
+<h2 id="s2"><span class="section-num">2.</span> Objectives</h2>
+<ul>
+  <li>Develop a fully functional, multi-step loan application form with a clean and modern user interface.</li>
+  <li>Implement real-time client-side validation for all form fields, including Indian-specific formats (PAN, Aadhaar).</li>
+  <li>Provide an auto-save mechanism to prevent data loss during long form sessions.</li>
+  <li>Enable document upload with client-side image compression for optimal performance.</li>
+  <li>Integrate a digital signature pad for legally binding electronic signatures.</li>
+  <li>Support conditional form steps (e.g., Collateral step only for Home and Business loans).</li>
+  <li>Build a comprehensive End-to-End (E2E) test suite to ensure application reliability.</li>
+  <li>Deliver a production-ready application with smooth animations, accessible design, and a premium dark-themed UI.</li>
+</ul>
+
+<!-- =============== 3. TECHNOLOGY STACK =============== -->
+<div class="page-break"></div>
+
+<h2 id="s3"><span class="section-num">3.</span> Technology Stack</h2>
+
+<table>
+  <thead>
+    <tr><th>Category</th><th>Technology</th><th>Purpose</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Markup</td><td>HTML5</td><td>Semantic page structure, accessibility</td></tr>
+    <tr><td>Styling</td><td>CSS3 (Vanilla)</td><td>Custom properties, animations, responsive layout</td></tr>
+    <tr><td>Logic</td><td>JavaScript (ES6+)</td><td>State management, DOM manipulation, validation</td></tr>
+    <tr><td>Build Tool</td><td>Vite 8</td><td>Hot Module Replacement, optimized production builds</td></tr>
+    <tr><td>Testing</td><td>Playwright</td><td>Cross-browser End-to-End testing</td></tr>
+    <tr><td>Version Control</td><td>Git + GitHub</td><td>Source code management and collaboration</td></tr>
+  </tbody>
+</table>
+
+<h3>Why Vanilla JavaScript?</h3>
+<p>
+  The decision to use vanilla JavaScript instead of a framework like React or Vue was deliberate. It demonstrates a deep understanding of core web fundamentals — DOM APIs, state management patterns, component architecture, and event handling — without the abstraction layer that frameworks provide. This approach results in a smaller bundle size, faster load times, and zero external runtime dependencies.
+</p>
+
+<!-- =============== 4. SYSTEM ARCHITECTURE =============== -->
+<h2 id="s4"><span class="section-num">4.</span> System Architecture</h2>
+<p>
+  The application follows a <strong>component-based architecture</strong> with a centralized state management pattern, similar to frameworks like Redux but implemented manually. The key architectural principles are:
+</p>
+
+<h3>4.1 Centralized State</h3>
+<p>
+  A single JavaScript object holds all application state — current step index, form field values, uploaded documents, and signature data. All components read from and write to this central state through a controlled <code>handleFieldUpdate()</code> function.
+</p>
+
+<h3>4.2 Step-Based Rendering</h3>
+<p>
+  Each form step is an isolated module that exports a <code>render()</code> function (which returns a DOM element) and a <code>validate()</code> function (which returns validation results). The main orchestrator calls these functions based on the current step index.
+</p>
+
+<h3>4.3 Reusable Components</h3>
+<p>
+  Common UI elements — progress bar, toast notifications, modals, file uploader, and signature pad — are extracted into standalone component modules that can be instantiated anywhere in the application.
+</p>
+
+<!-- =============== 5. PROJECT STRUCTURE =============== -->
+<div class="page-break"></div>
+
+<h2 id="s5"><span class="section-num">5.</span> Project Structure</h2>
+
+<div class="file-tree">
+loan-application/<br>
+├── index.html &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;── Entry point<br>
+├── package.json &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;── Dependencies & scripts<br>
+├── playwright.config.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;── Test configuration<br>
+├── public/<br>
+│&nbsp;&nbsp; ├── favicon.svg<br>
+│&nbsp;&nbsp; └── icons.svg<br>
+├── src/<br>
+│&nbsp;&nbsp; ├── main.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;── App orchestrator & state<br>
+│&nbsp;&nbsp; ├── components/<br>
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── file-uploader.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;── Document upload component<br>
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── modal.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;── Modal dialog component<br>
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── progress-bar.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;── Step progress indicator<br>
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── signature-pad.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;── Canvas-based signature<br>
+│&nbsp;&nbsp; │&nbsp;&nbsp; └── toast.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;── Notification toasts<br>
+│&nbsp;&nbsp; ├── steps/<br>
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── step1-loan-type.js &nbsp;&nbsp;&nbsp;── Loan type selection<br>
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── step2-personal-info.js ── Personal details & KYC<br>
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── step3-contact-address.js ── Contact & address<br>
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── step4-employment.js &nbsp;&nbsp;── Employment / business info<br>
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── step5-loan-details.js ── Loan amount, tenure, EMI<br>
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── step6-financial.js &nbsp;&nbsp;&nbsp;── Financial details & bank<br>
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── step7-collateral.js &nbsp;&nbsp;── Collateral (conditional)<br>
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── step8-documents.js &nbsp;&nbsp;&nbsp;── Document uploads<br>
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── step9-signature.js &nbsp;&nbsp;&nbsp;── E-Signature capture<br>
+│&nbsp;&nbsp; │&nbsp;&nbsp; └── step10-review.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;── Review & submit<br>
+│&nbsp;&nbsp; ├── styles/<br>
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── index.css &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;── Global styles & CSS variables<br>
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── components.css &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;── Component styles<br>
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── steps.css &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;── Step-specific styles<br>
+│&nbsp;&nbsp; │&nbsp;&nbsp; └── animations.css &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;── Keyframe animations<br>
+│&nbsp;&nbsp; └── utils/<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ├── address-autocomplete.js ── Pincode-based auto-fill<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ├── autosave.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;── LocalStorage persistence<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ├── image-compress.js &nbsp;&nbsp;&nbsp;&nbsp;── Client-side compression<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ├── pan-aadhaar.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;── PAN & Aadhaar validation<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; └── validation.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;── Field validation rules<br>
+└── tests/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;└── e2e/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── full-flow.spec.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;── Complete application flow<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── personal-loan.spec.js &nbsp;&nbsp;── Personal loan E2E test<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── home-loan.spec.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;── Home loan E2E test<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── business-loan.spec.js &nbsp;&nbsp;── Business loan E2E test<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── validation.spec.js &nbsp;&nbsp;&nbsp;&nbsp;── Validation tests<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── documents.spec.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;── Document upload tests<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── signature.spec.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;── Signature pad tests<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── autosave.spec.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;── Auto-save persistence tests<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── helpers.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;── Test helper utilities<br>
+</div>
+
+<!-- =============== 6. MODULE DESCRIPTIONS =============== -->
+<h2 id="s6"><span class="section-num">6.</span> Module Descriptions</h2>
+
+<h3>6.1 Core Application (<code>src/main.js</code>)</h3>
+<p>
+  The main entry point that initializes the application. It manages centralized state, orchestrates step rendering, handles navigation (Previous/Next), binds the progress bar, triggers auto-save on field updates, and manages the submission flow with a dynamically generated reference number.
+</p>
+
+<h3>6.2 Components</h3>
+
+<table>
+  <thead>
+    <tr><th>Component</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>progress-bar.js</code></td><td>Renders a numbered step indicator with clickable completed steps, connector lines, and active/completed states.</td></tr>
+    <tr><td><code>toast.js</code></td><td>Non-blocking notification system supporting success, error, info, and warning types with auto-dismiss.</td></tr>
+    <tr><td><code>modal.js</code></td><td>Reusable modal dialog with customizable title, body, action buttons, and optional close behavior.</td></tr>
+    <tr><td><code>file-uploader.js</code></td><td>Drag-and-drop file upload with file type validation, size limits, preview thumbnails, and image compression.</td></tr>
+    <tr><td><code>signature-pad.js</code></td><td>HTML5 Canvas-based signature capture with drawing, clearing, and data export (Base64 PNG).</td></tr>
+  </tbody>
+</table>
+
+<h3>6.3 Form Steps (10 Steps)</h3>
+
+<table>
+  <thead>
+    <tr><th>Step</th><th>Title</th><th>Fields & Logic</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1</td><td>Loan Type</td><td>Selection cards for Personal, Home, or Business Loan with descriptions and amount ranges.</td></tr>
+    <tr><td>2</td><td>Personal Info</td><td>Full name, DOB, gender, marital status, PAN verification, and Aadhaar OTP verification.</td></tr>
+    <tr><td>3</td><td>Contact &amp; Address</td><td>Email, phone, full address with pincode auto-fill (city/district/state), residence type.</td></tr>
+    <tr><td>4</td><td>Employment</td><td>Conditional fields — salaried (company, designation, income) vs. self-employed (business details, GST, turnover).</td></tr>
+    <tr><td>5</td><td>Loan Details</td><td>Loan amount slider, tenure selector, purpose, and real-time EMI calculator with interest rate display.</td></tr>
+    <tr><td>6</td><td>Financial Info</td><td>Existing loan obligations, credit score, bank account details with IFSC validation.</td></tr>
+    <tr><td>7</td><td>Collateral</td><td><em>(Conditional — Home &amp; Business loans only)</em> Property type, location, value, age, and ownership details.</td></tr>
+    <tr><td>8</td><td>Documents</td><td>Upload identity proof, address proof, income proof, and bank statements with image compression.</td></tr>
+    <tr><td>9</td><td>E-Signature</td><td>Canvas signature pad with terms &amp; conditions acceptance and date stamp.</td></tr>
+    <tr><td>10</td><td>Review &amp; Submit</td><td>Full summary of all entered data with edit links back to specific steps, final submission button.</td></tr>
+  </tbody>
+</table>
+
+<div class="page-break"></div>
+
+<h3>6.4 Utility Modules</h3>
+
+<table>
+  <thead>
+    <tr><th>Utility</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>validation.js</code></td><td>Comprehensive field validation rules including required checks, email/phone regex, numeric ranges, and custom validators.</td></tr>
+    <tr><td><code>pan-aadhaar.js</code></td><td>Indian PAN card format validation (AAAAA0000A) and Aadhaar number validation (12-digit with Verhoeff check).</td></tr>
+    <tr><td><code>address-autocomplete.js</code></td><td>Pincode-based auto-fill of city, district, and state fields using a built-in lookup database.</td></tr>
+    <tr><td><code>autosave.js</code></td><td>Debounced LocalStorage persistence with save indicator, state restoration, and time-since-last-save display.</td></tr>
+    <tr><td><code>image-compress.js</code></td><td>Client-side image compression using Canvas API to reduce file sizes before upload.</td></tr>
+  </tbody>
+</table>
+
+<!-- =============== 7. APPLICATION WORKFLOW =============== -->
+<h2 id="s7"><span class="section-num">7.</span> Application Workflow</h2>
+
+<p>The following describes the end-to-end user journey through the application:</p>
+
+<ol>
+  <li><strong>Application Load:</strong> The user opens the application. If a previously saved session exists in LocalStorage, a modal prompts the user to either resume or start fresh.</li>
+  <li><strong>Step 1 — Loan Type Selection:</strong> The user selects from three loan type cards (Personal, Home, or Business). This choice determines which subsequent fields and steps are displayed.</li>
+  <li><strong>Steps 2–6 — Data Entry:</strong> The user fills in personal information, contact details, employment data, loan parameters (with real-time EMI calculation), and financial details. Each step validates all fields before allowing progression.</li>
+  <li><strong>Step 7 — Collateral (Conditional):</strong> This step is dynamically shown only for Home and Business loan applications, requiring property or collateral details.</li>
+  <li><strong>Step 8 — Documents:</strong> The user uploads required documents (ID proof, address proof, income proof, bank statements). Images are automatically compressed on the client side.</li>
+  <li><strong>Step 9 — E-Signature:</strong> The user signs on a canvas pad and agrees to terms and conditions.</li>
+  <li><strong>Step 10 — Review &amp; Submit:</strong> A complete summary of all entered data is displayed. The user can navigate back to any step to edit. On submission, a unique reference number is generated.</li>
+  <li><strong>Throughout:</strong> The auto-save system continuously persists form data to LocalStorage, and a progress bar visualizes the user's position in the workflow.</li>
+</ol>
+
+<!-- =============== 8. KEY FEATURES =============== -->
+<div class="page-break"></div>
+
+<h2 id="s8"><span class="section-num">8.</span> Key Features</h2>
+
+<h3>8.1 Multi-Step Form Wizard with Progress Bar</h3>
+<p>
+  The application breaks a complex loan form into 10 manageable steps, each with its own validation. A visual progress bar at the top shows completed, current, and upcoming steps. Users can click on completed steps to navigate back and edit.
+</p>
+
+<h3>8.2 Conditional Step Logic</h3>
+<p>
+  The Collateral step (Step 7) is dynamically included or excluded based on the selected loan type. The progress bar, step numbering, and navigation all adapt automatically.
+</p>
+
+<h3>8.3 Real-Time EMI Calculator</h3>
+<p>
+  In the Loan Details step, users can adjust the loan amount and tenure using interactive sliders. The Equated Monthly Installment (EMI), total interest payable, and applicable interest rate are calculated and displayed in real time.
+</p>
+
+<h3>8.4 PAN &amp; Aadhaar Verification</h3>
+<p>
+  The application validates Indian PAN card numbers against the standard alphanumeric format (AAAAA0000A) and Aadhaar numbers using the 12-digit format. A simulated OTP verification flow is provided for Aadhaar.
+</p>
+
+<h3>8.5 Address Auto-Complete</h3>
+<p>
+  When users enter a 6-digit Indian pincode, the city, district, and state fields are automatically populated using a built-in lookup utility, reducing manual entry and errors.
+</p>
+
+<h3>8.6 Client-Side Image Compression</h3>
+<p>
+  Uploaded document images are automatically compressed using the HTML5 Canvas API before being stored, reducing memory usage and improving performance without any server-side processing.
+</p>
+
+<h3>8.7 Auto-Save with Session Recovery</h3>
+<p>
+  All form data is automatically saved to the browser's LocalStorage using a debounced save mechanism. If the user closes the browser and returns later, they are prompted to resume their application from where they left off.
+</p>
+
+<h3>8.8 Digital Signature Capture</h3>
+<p>
+  A canvas-based signature pad allows users to draw their signature using mouse or touch input. The signature is captured as a Base64-encoded PNG image and included in the final review.
+</p>
+
+<h3>8.9 Premium Dark-Themed UI</h3>
+<p>
+  The application features a carefully crafted dark theme with CSS custom properties, gradient backgrounds, glassmorphism effects, smooth micro-animations, and modern typography for a premium look and feel.
+</p>
+
+<!-- =============== 9. TESTING =============== -->
+<div class="page-break"></div>
+
+<h2 id="s9"><span class="section-num">9.</span> Testing &amp; Quality Assurance</h2>
+
+<p>
+  The application includes a comprehensive End-to-End (E2E) test suite built with <strong>Playwright</strong>, covering all critical user flows and edge cases.
+</p>
+
+<h3>9.1 Test Suite Summary</h3>
+
+<table>
+  <thead>
+    <tr><th>Test File</th><th>Coverage Area</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>full-flow.spec.js</code></td><td>Complete application flow from loan type selection to submission</td></tr>
+    <tr><td><code>personal-loan.spec.js</code></td><td>Personal loan specific fields and flow (no collateral step)</td></tr>
+    <tr><td><code>home-loan.spec.js</code></td><td>Home loan flow with collateral step inclusion</td></tr>
+    <tr><td><code>business-loan.spec.js</code></td><td>Business loan flow with self-employment fields and collateral</td></tr>
+    <tr><td><code>validation.spec.js</code></td><td>Field-level validation rules (email, phone, PAN, Aadhaar, etc.)</td></tr>
+    <tr><td><code>documents.spec.js</code></td><td>Document upload, file type validation, and compression</td></tr>
+    <tr><td><code>signature.spec.js</code></td><td>Signature pad drawing, clearing, and data capture</td></tr>
+    <tr><td><code>autosave.spec.js</code></td><td>Auto-save persistence, session restoration, and "Start Fresh" logic</td></tr>
+  </tbody>
+</table>
+
+<h3>9.2 Running the Tests</h3>
+<pre>
+# Install dependencies
+npm install
+
+# Run the development server
+npm run dev
+
+# Run Playwright tests
+npx playwright test
+
+# Run tests with a visual UI
+npx playwright test --ui
+</pre>
+
+<!-- =============== 10. SCREENSHOTS =============== -->
+<div class="page-break"></div>
+
+<h2 id="s10"><span class="section-num">10.</span> Screenshots</h2>
+
+<h3>10.1 Loan Type Selection Screen</h3>
+<div class="screenshot-container">
+  <img src="screenshots/screenshot1.png" alt="Loan Type Selection Screen">
+  <p class="screenshot-caption">Figure 1: Landing page with loan type selection — Personal, Home, and Business loan cards with progress bar.</p>
+</div>
+
+<div class="page-break"></div>
+
+<h3>10.2 Personal Information Form</h3>
+<div class="screenshot-container">
+  <img src="screenshots/screenshot2.png" alt="Personal Information Form">
+  <p class="screenshot-caption">Figure 2: Personal information step showing KYC fields — Full Name, DOB, Gender, PAN verification, and Aadhaar OTP.</p>
+</div>
+
+<!-- =============== 11. FUTURE ENHANCEMENTS =============== -->
+<div class="page-break"></div>
+
+<h2 id="s11"><span class="section-num">11.</span> Future Enhancements</h2>
+<ul>
+  <li><strong>Backend Integration:</strong> Connect to a REST API or Firebase backend for persistent data storage and actual loan processing.</li>
+  <li><strong>Authentication:</strong> Add user login/registration with Firebase Auth or OAuth for secure application tracking.</li>
+  <li><strong>Real KYC Verification:</strong> Integrate with government APIs (DigiLocker, UIDAI) for actual PAN and Aadhaar verification.</li>
+  <li><strong>Application Status Tracking:</strong> Dashboard to track loan application status (Under Review, Approved, Rejected).</li>
+  <li><strong>PDF Generation:</strong> Auto-generate a downloadable PDF summary of the completed loan application.</li>
+  <li><strong>Multi-language Support:</strong> Add i18n support for Hindi, Tamil, and other regional Indian languages.</li>
+  <li><strong>Accessibility Improvements:</strong> ARIA labels, keyboard navigation enhancements, and screen reader support.</li>
+  <li><strong>Progressive Web App (PWA):</strong> Add service worker and offline support for a native app-like experience.</li>
+</ul>
+
+<!-- =============== 12. CONCLUSION =============== -->
+<h2 id="s12"><span class="section-num">12.</span> Conclusion</h2>
+<p>
+  The <strong>LoanEase</strong> project demonstrates the development of a production-quality, multi-step loan application using modern web technologies without relying on heavy frontend frameworks. The application showcases strong competencies in:
+</p>
+<ul>
+  <li>Component-based architecture with vanilla JavaScript</li>
+  <li>Centralized state management and step orchestration</li>
+  <li>Advanced form handling with conditional logic and real-time validation</li>
+  <li>Client-side utilities (image compression, auto-save, address auto-fill)</li>
+  <li>Premium UI/UX design with CSS animations and dark theme</li>
+  <li>Comprehensive E2E testing with Playwright</li>
+</ul>
+<p>
+  The project is fully version-controlled on GitHub and ready for extension with backend services, authentication, and real-world KYC integration.
+</p>
+
+<!-- =============== 13. REFERENCES =============== -->
+<h2 id="s13"><span class="section-num">13.</span> References</h2>
+<ol>
+  <li>MDN Web Docs — <a href="https://developer.mozilla.org/">https://developer.mozilla.org/</a></li>
+  <li>Vite Documentation — <a href="https://vitejs.dev/">https://vitejs.dev/</a></li>
+  <li>Playwright Documentation — <a href="https://playwright.dev/">https://playwright.dev/</a></li>
+  <li>GitHub Repository — <a href="https://github.com/anandhukrishnaas1/loan-app">https://github.com/anandhukrishnaas1/loan-app</a></li>
+</ol>
+
+<!-- =============== FOOTER =============== -->
+<div class="report-footer">
+  LoanEase — Smart Loan Application Portal &nbsp;|&nbsp; Project Report &nbsp;|&nbsp; June 2026
+</div>
+
+</body>
+</html>
